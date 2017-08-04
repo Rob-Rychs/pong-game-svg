@@ -37,12 +37,55 @@ export default class Ball {
     }
   }
 
-  render(svg) {
+  paddleCollision(player1, player2) {
+    if (this.vx > 0) {
+    
+    // detect player2 collision
+    let paddle = player2.coordinates(player2.x, player2.y, player2.width, player2.height);
+    let [leftX, rightX, topY, bottomY] = paddle;
+
+    if (
+      this.x + this.radius >= leftX
+      && this.y >=  topY
+      && this.y <= bottomY
+    ) {
+      this.vx = -this.vx;
+    }
+
+  } else {
+    
+    //detect player1 collision
+    let paddle = player1.coordinates(player1.x, player1.y, player1.width, player1.height);
+    let [leftX, rightX, topY, bottomY] = paddle;
+
+     if (
+      this.x - this.radius <= rightX
+      && this.y >=  topY
+      && this.y <= bottomY
+    ) {
+      this.vx = -this.vx;
+      }
+    }
+  }
+
+  goal(player) {
+    //increment winning player score
+    player.score++;
+    this.reset();
+    console.log(player.score);
+  }
+
+  render(svg, player1, player2) {
     // could refactor this into it's own methode
     this.x += this.vx;
     this.y += this.vy;
 
     this.wallCollision();
+    this.paddleCollision(player1, player2);
+
+    // detect score
+    // if the right wall was touched? increment player 1 score (and give advantage)
+    // if the left wall was touched? increment player 2 score (and give advantage)
 
   let ball = document.createElementNS(SVG_NS, 'circle');
     ball.setAttributeNS(null, 'r', this.radius);
@@ -51,6 +94,15 @@ export default class Ball {
     ball.setAttributeNS(null, 'cy', this.y);
     svg.appendChild(ball);
 
+    const rightGoal = this.x + this.radius >= this.boardWidth;
+    const leftGoal = this.x - this.radius <= 0;
+
+    if (rightGoal) {
+      this.goal(player1);
+      this.direction = -1;
+    } else if (leftGoal) {
+      this.direction = 1;
+      this.goal(player2);
+    }
   } 
-  
 }  
