@@ -22,7 +22,7 @@ export default class Board {
     line.setAttributeNS(null, 'y2', this.height);
     line.setAttributeNS(null, 'stroke', 'whitesmoke');
     line.setAttributeNS(null, 'stroke-width', 5);
-    line.setAttributeNS(null, 'stroke-dasharray', '6, 4');
+    line.setAttributeNS(null, 'stroke-dasharray', '6, 15');
     svg.appendChild(line);
 
   }
