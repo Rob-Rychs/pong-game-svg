@@ -7,6 +7,7 @@ export default class Ball {
     this.boardWidth = boardWidth;
     this.boardHeight = boardHeight;
     this.direction = 1;
+    this.ping = new Audio('public/sounds/pong-01.wav');
     this.reset()
   }  
 
@@ -25,16 +26,12 @@ export default class Ball {
   }
 
   wallCollision(){
-    const hitLeft = this.x - this.radius <= 0;
-    const hitRight = this.x + this.radius >=this.boardWidth;
     const hitTop = this.y - this.radius <= 0;
     const hitBottom = this.y + this.radius >= this.boardHeight;
 
-    if (hitLeft || hitRight) {
-      this.vx = -this.vx;
-    } else if (hitTop || hitBottom) {
-       this.vy = -this.vy;
-    }
+    if (hitTop || hitBottom) {
+      this.vy = -this.vy;
+    } 
   }
 
   paddleCollision(player1, player2) {
@@ -50,6 +47,7 @@ export default class Ball {
       && this.y <= bottomY
     ) {
       this.vx = -this.vx;
+      this.ping.play();
     }
 
   } else {
@@ -64,6 +62,7 @@ export default class Ball {
       && this.y <= bottomY
     ) {
       this.vx = -this.vx;
+       this.ping.play();
       }
     }
   }
@@ -72,7 +71,6 @@ export default class Ball {
     //increment winning player score
     player.score++;
     this.reset();
-    console.log(player.score);
   }
 
   render(svg, player1, player2) {
